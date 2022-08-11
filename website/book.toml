@@ -1,0 +1,21 @@
+[book]
+title = "seL4 Microkit Tutorial"
+authors = ["Ivan Velickovic"]
+language = "en"
+multilingual = false
+src = "src"
+description = "A tutorial for the seL4 Microkit"
+
+[build]
+build-dir = "build"
+
+[output.html]
+theme = "microkit_theme"
+default-theme = "microkit_theme"
+preferred-dark-theme = "microkit_theme"
+git-repository-url = "https://github.com/au-ts/microkit_tutorial"
+
+[preprocessor.variables]
+use_env = true
+
+[preprocessor.variables.variables]

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Establish internet connection
+ifconfig eth0 up
+udhcpc eth0
+
+# Request the word
+echo "Linux user-space: Send request to trustworthy.systems/projects/microkit/tutorial/word"
+WORD=$(wget -qO- --no-check-certificate trustworthy.systems/projects/microkit/tutorial/word)
+echo "Linux user-space: Received word"
+
+# Need to go through each letter of the word
+# and then write it to a location that the
+# virtual machine monitor is expecting
+echo "Linux user-space: Transfer word to virtual-machine monitor"
+busybox devmem 0x50000000 w $(printf "%d" "'${WORD:0:1}")
+busybox devmem 0x50000001 w $(printf "%d" "'${WORD:1:2}")
+busybox devmem 0x50000002 w $(printf "%d" "'${WORD:2:3}")
+busybox devmem 0x50000003 w $(printf "%d" "'${WORD:3:4}")
+busybox devmem 0x50000004 w $(printf "%d" "'${WORD:4:5}")
+echo "Linux user-space: Finished"

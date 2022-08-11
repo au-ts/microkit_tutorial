@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <!-- Define your system here -->
+    <memory_region name="uart" size="0x1_000" phys_addr="0x9_000_000"/>
+    <memory_region name="client_to_serial" size="0x1000" />
+    <memory_region name="serial_to_client" size="0x1000" />
+
+    <protection_domain name="wordle_server" priority="254" pp="true">
+        <program_image path="wordle_server.elf" />
+    </protection_domain>
+
+    <protection_domain name="serial_server" priority="254">
+        <program_image path="serial_server.elf" />
+        <map mr="uart" vaddr="0x2000000" perms="rw" cached="false" setvar_vaddr="uart_base_vaddr"/>
+        <map mr="serial_to_client" vaddr="0x4000000" perms="wr" setvar_vaddr="serial_to_client_vaddr"/>
+        <map mr="client_to_serial" vaddr="0x4001000" perms="r" setvar_vaddr="client_to_serial_vaddr"/>
+        <irq irq="33" id="1" />
+    </protection_domain>
+
+    <protection_domain name="client" priority="253" pp="true">
+        <program_image path="client.elf" />
+        <map mr="serial_to_client" vaddr="0x4000000" perms="r" setvar_vaddr="serial_to_client_vaddr"/>
+        <map mr="client_to_serial" vaddr="0x4001000" perms="rw" setvar_vaddr="client_to_serial_vaddr"/>
+    </protection_domain>
+
+    <channel>
+        <end pd="client" id="1" />
+        <end pd="serial_server" id="2" />
+    </channel>
+
+    <channel>
+        <end pd="client" id="2" />
+        <end pd="wordle_server" id="1" />
+    </channel>
+
+    <!--
+        This is what the virtual machine will use as its "RAM".
+        Remember it does not know it is a VM and so  will expect a
+        block of contigious memory as RAM.
+    -->
+    <memory_region name="guest_ram" size="0x10000000" page_size="0x200_000"
+        phys_addr="0x40000000" />
+    <!-- Create a memory region for the ethernet device -->
+    <memory_region name="ethernet" size="0x1000" phys_addr="0xa003000" />
+    <!--
+        Create a memory region for the GIC vCPU, this is part of
+        ARM's hardware virtualisation, I will not go into detail here,
+        but it is necessary for the virtual machine to function.
+    -->
+    <memory_region name="gic_vcpu" size="0x1000" phys_addr="0x8040000" />
+
+    <!-- Create a VMM protection domain -->
+    <protection_domain name="vmm" priority="101">
+        <program_image path="vmm.elf" />
+        <!--
+            Map in the virtual machine's RAM region as the VMM needs
+            access to it as well for starting and setting up the VM.
+        -->
+        <map mr="guest_ram" vaddr="0x40000000" perms="rw"
+            setvar_vaddr="guest_ram_vaddr" />
+        <!--
+            Create the virtual machine, the `id` is used for the
+            VMM to refer to the VM. Similar to channels and IRQs
+        -->
+        <virtual_machine name="linux" id="0" priority="100">
+            <map mr="guest_ram" vaddr="0x40000000" perms="rwx" />
+            <map mr="ethernet" vaddr="0xa003000" perms="rw" cached="false" />
+            <map mr="uart" vaddr="0x9000000" perms="rw" cached="false" />
+            <map mr="gic_vcpu" vaddr="0x8010000" perms="rw" cached="false" />
+        </virtual_machine>
+        <!--
+            We want the VMM to receive the ethernet interrupts, which it
+            will then deliver to the VM
+         -->
+        <irq irq="79" id="2" trigger="edge" />
+    </protection_domain>
+
+    <channel>
+        <end pd="vmm" id="1" />
+        <end pd="wordle_server" id="2" />
+    </channel>
+</system>
