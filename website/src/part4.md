@@ -134,9 +134,9 @@ udhcpc: broadcasting select for 10.0.2.15, server 10.0.2.2
 udhcpc: lease of 10.0.2.15 obtained from 10.0.2.2, lease time 86400
 deleting routers
 adding dns 10.0.2.3
-LINUX WORDLE: Send request to trustworthy.systems/projects/microkit/tutorial/word
-LINUX WORDLE: Received word
-LINUX WORDLE: Transfer word to virtual-machine monitor
+Linux user-space: Send request to trustworthy.systems/projects/microkit/tutorial/word
+Linux user-space: Received word
+Linux user-space: Transfer word to virtual-machine monitor
 <<seL4(CPU 0) [decodeInvocation/645 T0x806000ac00 "child of: 'rootserver'" @200288]: Attempted to invoke a null cap #75.>>
 ```
 
@@ -184,6 +184,6 @@ It is simply setting each character in one of the message-registers. So in the W
 message-register using `uint64_t microkit_mr_get(uint8_t mr)` to update the `word` array from being equal to "hello"
 to our new word.
 
-After doing that and re-running the system, you should see the message `LINUX WORDLE: Transfer word to virtual-machine monitor`.
+After doing that and re-running the system, you should see the message `Linux user-space: Transfer word to virtual-machine monitor`.
 Hit the `RETURN` key then you should see the client interface printing again. You can now guess the
 secret word! If you do not want to guess, you can instead print out the word in the Wordle server :).
