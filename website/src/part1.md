@@ -67,7 +67,7 @@ in seL4 are modelled by capabilities. If a PD does not have the capability to so
     is used to refer to that file from now on. Say if you want to read or write or close the file, you have to use the
     file-descriptor. You can think of capabilities as similar to file-descriptors except that it is for every kind of
     object in seL4. For example if you wanted a thread to have access to a certain page of memory, it must have the
-    capability to that page. If you want to threads to be able to communicate (as we'll see later), each thread must
+    capability to that page. If you want multiple threads to communicate (as we'll see later), each thread must
     also have capabilities to the communication objects (such as Endpoints and Notifications in seL4).
 </details>
 
