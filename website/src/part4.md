@@ -27,7 +27,7 @@ performance and reliability, having a native seL4 driver is typically better.
 In this part, you will be shown how to run a virtual machine running Linux using
 Microkit. We will make use of the ethernet driver that already exists in Linux to
 talk to a server `{{LEARNMICROKIT_WORD_URL}}` that responds with a new five-letter word
-every second.
+on every request.
 
 If you do `wget -qO- {{LEARNMICROKIT_WORD_URL}}`, you should see a new word each time
 you run the command.
