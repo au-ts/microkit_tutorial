@@ -6,8 +6,8 @@ microkernel.
 
 The tutorial is available [here](https://trustworthy.systems/projects/microkit/tutorial).
 
-This repository contains the infrasturcture and material for the tutorial. If
-you are devloping the tutorial itself, the rest of the README is for you.
+This repository contains the infrastructure and material for the tutorial. If
+you are developing the tutorial itself, the rest of the README is for you.
 
 ## Tutorial website
 
