@@ -21,7 +21,7 @@ When a protection domain is called, the protected entry point is invoked. The co
 The caller is blocked until the callee returns. Protected procedures must execute in bounded time. Currently, the caller must trust the callee to conform.
 
 To call a PP, a PD calls `microkit_ppcall` passing the channel identifier and a message structure, a message structure is returned from this function.
-* To create a message structure, you can use `microkit_msginfo microkit_msginfo_new(uint64_t label, uint16_t count)`. The `label` is typically used for distinguishing PPCs when there are multiple from the same client to server. In this tutorial it will not be necessary to use the `label` and it can just be 0. The `count` will be used and it represents how many arguments (message-registers) are in the PPC.
+* To create a message structure, you can use `microkit_msginfo microkit_msginfo_new(uint64_t label, uint16_t count)`. The `label` is typically used for distinguishing PPCs when a server has multiple services for a client to invoke. In this tutorial it will not be necessary to use the `label` and it can just be 0. The `count` will be used and it represents how many arguments (message-registers) are in the PPC.
 * To set the arguments of a message (message registers), you can use `void microkit_mr_set(uint8_t mr, uint64_t value)` where `mr` is the index.
 * To get arguments from the returned message, you can use `uint64_t microkit_mr_get(uint8_t mr)` where `mr` is the index.
 * To get the label of a message, you can use `uint64_t microkit_msginfo_get_label(microkit_msginfo msginfo);`.
