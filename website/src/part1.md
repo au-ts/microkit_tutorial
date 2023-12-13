@@ -51,11 +51,11 @@ cannot do much except execute its code.
 A protection domain is an abstraction created by Microkit and is made up of various seL4 primitives. The main ones are:
 * A thread-control-block (TCB), because in order to actually have a thread of execution, seL4 needs to create a thread.
 * A virtual address-space, known as a VSpace. This is what memory the kernel allows the PD to access. By default all that
-  is in the VSpace is the ELF[^1] of the PD, so it can execute its own code, and nothing else.
+  is in the VSpace is the ELF[^2] of the PD, so it can execute its own code, and nothing else.
 * A capability space, known as a CSpace. Each protection domain has its own CSpace which is a data structure that holds all the capabilities
   that a PD has access to.
 
-[^1]: ELF stands for Executable and Linkable Format, it is just a standard format to compile programs into.
+[^2]: ELF stands for Executable and Linkable Format, it is just a standard format to compile programs into.
 
 As you can see, there is not lot a PD can actually do by default. And this is **intentional**. We do not want PDs
 to be able to access anything unless we explicitly allow it. This is allowed by the capability system, as all resources
