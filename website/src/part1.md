@@ -296,7 +296,7 @@ Your task now is to:
     1. Get the character that has been inputted via the keyboard with the `int uart_get_char()` function.
     2. Print out the character using the `int uart_put_char()` function.
     3. Call the function `void uart_handle_irq()` for the driver to handle the IRQ.
-    4. The Microkit library function `void microkit_irq_ack(microkit_channel ch)`, in order to acknowledge the IRQ.
+    4. Call the libmicrokit function `void microkit_irq_ack(microkit_channel ch)`, in order to acknowledge the IRQ.
         * Why do we need to acknowledge the IRQ? What this does is tell seL4 that we have finished handling
           the IRQ and are ready to receive another one. If we do not acknowledge it, we will never receive
           another UART IRQ again!
