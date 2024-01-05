@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build_linux_x86_64:
+    name: Build and run examples (Linux x86-64)
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Download and extract Microkit SDK
+        run: |
+          curl -L trustworthy.systems/Downloads/microkit_tutorial/sdk-linux-x64.tar.gz -o sdk.tar.gz
+          tar xf sdk.tar.gz
+      - name: Install dependencies
+        # 'expect' is only a dependency for CI testing
+        run: sudo apt update && sudo apt install -y make gcc-aarch64-linux-gnu qemu-system-arm expect
+      - name: Run tests
+        run: ./ci/test.sh
+  build_macos_x86_64:
+    name: Build and run examples (macOS x86-64)
+    runs-on: macos-12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Download and extract Microkit SDK
+        run: |
+          curl -L trustworthy.systems/Downloads/microkit_tutorial/sdk-macos-x64.tar.gz -o sdk.tar.gz
+          tar xf sdk.tar.gz
+      - name: Install dependencies
+        # 'expect' is only a dependency for CI testing
+        run: |
+          brew tap messense/macos-cross-toolchains
+          brew install make qemu aarch64-unknown-linux-gnu expect
+      - name: Run tests
+        run: ./ci/test.sh

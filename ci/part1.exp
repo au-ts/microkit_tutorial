@@ -1,0 +1,14 @@
+#!/usr/bin/env -S expect -f
+
+set SDK_PATH [lindex $argv 0]
+
+set timeout 10
+spawn make part1 MICROKIT_SDK=$SDK_PATH run
+expect "SERIAL SERVER: starting\r"
+
+set send_human {.1 .1 10 .1 .1}
+send -h "hello there"
+expect "hello there"
+
+# Exit out of QEMU
+send "\x21"; send "x"

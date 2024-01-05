@@ -1,0 +1,35 @@
+diff --color -bur tutorial/serial_server.c part1_solution/serial_server.c
+--- serial_server.c	2023-12-30 19:17:32.994019754 +1300
++++ serial_server.c	2023-12-31 18:26:53.970778474 +1300
+@@ -59,4 +59,15 @@
+     uart_put_str("SERIAL SERVER: starting\n");
+ }
+ 
+-void notified(microkit_channel channel) {}
++#define UART_IRQ_CH 1
++
++void notified(microkit_channel channel) {
++    switch (channel) {
++        case UART_IRQ_CH:
++            uart_put_char(uart_get_char());
++            uart_handle_irq();
++            microkit_irq_ack(channel);
++            break;
++    }
++}
++
+diff --color -bur tutorial/wordle.system part1_solution/wordle.system
+--- wordle.system	2023-12-30 19:17:33.186018434 +1300
++++ wordle.system	2023-12-31 18:26:07.196978679 +1300
+@@ -1,4 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <system>
+-    <!-- Define your system here -->
++    <memory_region name="uart" size="0x1_000" phys_addr="0x9_000_000"/>
++
++    <protection_domain name="serial_server" priority="254">
++        <program_image path="serial_server.elf" />
++        <map mr="uart" vaddr="0x2000000" perms="rw" cached="false" setvar_vaddr="uart_base_vaddr"/>
++        <irq irq="33" id="1" />
++    </protection_domain>
+ </system>

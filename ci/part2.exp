@@ -1,0 +1,16 @@
+#!/usr/bin/env -S expect -d -f
+
+set SDK_PATH [lindex $argv 0]
+
+set timeout 10
+spawn make part2 MICROKIT_SDK=$SDK_PATH run
+expect "SERIAL SERVER: starting\r"
+expect "Welcome to the Wordle client!"
+
+set send_human {.1 .1 10 .1 .1}
+send -h "hello"
+expect -ex {[ ] [ ] [ ] [ ] [ ]}
+expect -ex "\[h\u001b\[0m\] \[e\u001b\[0m\] \[l\u001b\[0m\] \[l\u001b\[0m\] \[o\u001b\[0m\]"
+
+# Exit out of QEMU
+send "\x21"; send "x"

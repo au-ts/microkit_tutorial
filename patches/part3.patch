@@ -1,0 +1,91 @@
+diff --color --exclude build -bur part2_sol/client.c part3_sol/client.c
+--- part2_sol/client.c	2023-12-31 18:38:16.648603521 +1300
++++ part3_sol/client.c	2023-12-31 18:56:40.012963871 +1300
+@@ -5,6 +5,7 @@
+ #include "wordle.h"
+ 
+ #define SERIAL_CHANNEL 1
++#define WORDLE_CHANNEL 2
+ 
+ uintptr_t serial_to_client_vaddr;
+ uintptr_t client_to_serial_vaddr;
+@@ -28,9 +29,16 @@
+ 
+ void wordle_server_send() {
+     // Implement this function to send the word over PPC
++    for (int i = 0; i < WORD_LENGTH; i++) {
++        microkit_mr_set(i, table[curr_row][i].ch);
++    }
++    microkit_ppcall(WORDLE_CHANNEL, microkit_msginfo_new(0, WORD_LENGTH));
+     // After doing the PPC, the Wordle server should have updated
+     // the message-registers containing the state of each character.
+     // Look at the message registers and update the `table` accordingly.
++    for (int i = 0; i < WORD_LENGTH; i++) {
++        table[curr_row][i].state = microkit_mr_get(i);
++    }
+ }
+ 
+ void serial_send(char *str) {
+diff --color --exclude build -bur part2_sol/serial_server.c part3_sol/serial_server.c
+--- part2_sol/serial_server.c	2023-12-31 18:39:04.064291557 +1300
++++ part3_sol/serial_server.c	2023-12-31 18:59:23.984520492 +1300
+@@ -78,4 +78,3 @@
+             break;
+     }
+ }
+-
+diff --color --exclude build -bur part2_sol/wordle_server.c part3_sol/wordle_server.c
+--- part2_sol/wordle_server.c	2023-12-31 18:30:00.545209786 +1300
++++ part3_sol/wordle_server.c	2023-12-31 18:54:32.409436632 +1300
+@@ -11,6 +11,8 @@
+  */
+ char word[WORD_LENGTH] = { 'h', 'e', 'l', 'l', 'o' };
+ 
++#define CLIENT_CHANNEL 1
++
+ bool is_character_in_word(char *word, int ch) {
+     for (int i = 0; i < WORD_LENGTH; i++) {
+         if (word[i] == ch) {
+@@ -36,3 +38,21 @@
+ }
+ 
+ void notified(microkit_channel channel) {}
++
++microkit_msginfo protected(microkit_channel channel, microkit_msginfo msginfo)
++{
++    switch (channel) {
++        case CLIENT_CHANNEL:
++            for (int i = 0; i < WORD_LENGTH; i++) {
++                char ch = microkit_mr_get(i);
++                microkit_mr_set(i, char_to_state(ch, word, i));
++            }
++            return microkit_msginfo_new(0, WORD_LENGTH);
++            break;
++        default:
++            microkit_dbg_puts("ERROR!\n");
++            break;
++    }
++
++    return microkit_msginfo_new(0, 0);
++}
+diff --color --exclude build -bur part2_sol/wordle.system part3_sol/wordle.system
+--- part2_sol/wordle.system	2023-12-31 18:58:14.691132819 +1300
++++ part3_sol/wordle.system	2023-12-31 18:58:12.727091175 +1300
+@@ -18,8 +18,17 @@
+         <map mr="client_to_serial" vaddr="0x4001000" perms="rw" setvar_vaddr="client_to_serial_vaddr"/>
+     </protection_domain>
+ 
++    <protection_domain name="wordle_server" priority="254" pp="true">
++        <program_image path="wordle_server.elf" />
++    </protection_domain>
++
+     <channel>
+         <end pd="client" id="1" />
+         <end pd="serial_server" id="2" />
+     </channel>
++
++    <channel>
++        <end pd="client" id="2" />
++        <end pd="wordle_server" id="1" />
++    </channel>
+ </system>

@@ -1,0 +1,100 @@
+diff --color --exclude build -bur client.c client.c
+--- client.c	2023-12-31 18:20:10.173634682 +1300
++++ client.c	2023-12-31 18:38:16.648603521 +1300
+@@ -4,6 +4,11 @@
+ #include "printf.h"
+ #include "wordle.h"
+ 
++#define SERIAL_CHANNEL 1
++
++uintptr_t serial_to_client_vaddr;
++uintptr_t client_to_serial_vaddr;
++
+ #define MOVE_CURSOR_UP "\033[5A"
+ #define CLEAR_TERMINAL_BELOW_CURSOR "\033[0J"
+ 
+@@ -29,7 +34,13 @@
+ }
+ 
+ void serial_send(char *str) {
+-    // Implement this function to get the serial server to print the string.
++    int i = 0;
++    while (str[i] != '\0') {
++        ((char *)client_to_serial_vaddr)[i] = str[i];
++        i++;
++    }
++    ((char *)client_to_serial_vaddr)[i] = '\0';
++    microkit_notify(SERIAL_CHANNEL);
+ }
+ 
+ // This function prints a CLI Wordle using pretty colours for what characters
+@@ -121,4 +132,13 @@
+     print_table(false);
+ }
+ 
+-void notified(microkit_channel channel) {}
++void notified(microkit_channel channel) {
++    switch (channel) {
++        case SERIAL_CHANNEL: {
++            char ch = ((char *)serial_to_client_vaddr)[0];
++            add_char_to_table(ch);
++            print_table(true);
++            break;
++        }
++    }
++}
+diff --color --exclude build -bur serial_server.c serial_server.c
+--- serial_server.c	2023-12-31 18:26:53.970778474 +1300
++++ serial_server.c	2023-12-31 18:39:04.064291557 +1300
+@@ -60,13 +60,21 @@
+ }
+ 
+ #define UART_IRQ_CH 1
++#define CLIENT_CH 2
++
++uintptr_t serial_to_client_vaddr;
++uintptr_t client_to_serial_vaddr;
+ 
+ void notified(microkit_channel channel) {
+     switch (channel) {
+         case UART_IRQ_CH:
+-            uart_put_char(uart_get_char());
++            ((char *)serial_to_client_vaddr)[0] = uart_get_char();
+             uart_handle_irq();
+             microkit_irq_ack(channel);
++            microkit_notify(CLIENT_CH);
++            break;
++        case CLIENT_CH:
++            uart_put_str((char *)client_to_serial_vaddr);
+             break;
+     }
+ }
+diff --color --exclude build -bur wordle.system wordle.system
+--- wordle.system	2023-12-31 18:26:07.196978679 +1300
++++ wordle.system	2023-12-31 18:58:14.691132819 +1300
+@@ -1,10 +1,25 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <system>
+     <memory_region name="uart" size="0x1_000" phys_addr="0x9_000_000"/>
++    <memory_region name="client_to_serial" size="0x1000" />
++    <memory_region name="serial_to_client" size="0x1000" />
+ 
+     <protection_domain name="serial_server" priority="254">
+         <program_image path="serial_server.elf" />
+         <map mr="uart" vaddr="0x2000000" perms="rw" cached="false" setvar_vaddr="uart_base_vaddr"/>
++        <map mr="serial_to_client" vaddr="0x4000000" perms="wr" setvar_vaddr="serial_to_client_vaddr"/>
++        <map mr="client_to_serial" vaddr="0x4001000" perms="r" setvar_vaddr="client_to_serial_vaddr"/>
+         <irq irq="33" id="1" />
+     </protection_domain>
++
++    <protection_domain name="client" priority="253" pp="true">
++        <program_image path="client.elf" />
++        <map mr="serial_to_client" vaddr="0x4000000" perms="r" setvar_vaddr="serial_to_client_vaddr"/>
++        <map mr="client_to_serial" vaddr="0x4001000" perms="rw" setvar_vaddr="client_to_serial_vaddr"/>
++    </protection_domain>
++
++    <channel>
++        <end pd="client" id="1" />
++        <end pd="serial_server" id="2" />
++    </channel>
+ </system>
