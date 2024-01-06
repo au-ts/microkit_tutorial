@@ -16,9 +16,12 @@ ifndef TOOLCHAIN
 		TOOLCHAIN := aarch64-linux-gnu
 	else ifdef TOOLCHAIN_AARCH64_UNKNOWN_LINUX_GNU
 		TOOLCHAIN := aarch64-unknown-linux-gnu
-	else
-		$(error "Could not find an AArch64 cross-compiler")
 	endif
+endif
+
+ifndef TOOLCHAIN
+error:
+	$(error "Could not find a compatible C compiler")
 endif
 
 BOARD := qemu_arm_virt
@@ -29,7 +32,6 @@ CPU := cortex-a53
 
 CC := $(TOOLCHAIN)-gcc
 LD := $(TOOLCHAIN)-ld
-AS := $(TOOLCHAIN)-as
 MICROKIT_TOOL ?= $(MICROKIT_SDK)/bin/microkit
 
 PRINTF_OBJS := printf.o util.o
