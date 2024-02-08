@@ -17,6 +17,19 @@ uintptr_t uart_base_vaddr;
 
 void uart_init() {
     *REG_PTR(uart_base_vaddr, UARTIMSC) = 0x50;
+
+    /*
+     * Convert Newline to Carriage return; backspace to DEL
+     */
+    switch (ch) {
+    case '\n':
+        ch = '\r';
+        break;
+    case 8:
+        ch = 0x7f;
+        break;
+    }
+    return ch;
 }
 
 int uart_get_char() {
