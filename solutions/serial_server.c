@@ -17,6 +17,14 @@ uintptr_t uart_base_vaddr;
 
 void uart_init() {
     *REG_PTR(uart_base_vaddr, UARTIMSC) = 0x50;
+}
+
+int uart_get_char() {
+    int ch = 0;
+
+    if ((*REG_PTR(uart_base_vaddr, UARTFR) & PL011_UARTFR_RXFE) == 0) {
+        ch = *REG_PTR(uart_base_vaddr, UARTDR) & RHR_MASK;
+    }
 
     /*
      * Convert Newline to Carriage return; backspace to DEL
@@ -29,16 +37,6 @@ void uart_init() {
         ch = 0x7f;
         break;
     }
-    return ch;
-}
-
-int uart_get_char() {
-    int ch = 0;
-
-    if ((*REG_PTR(uart_base_vaddr, UARTFR) & PL011_UARTFR_RXFE) == 0) {
-        ch = *REG_PTR(uart_base_vaddr, UARTDR) & RHR_MASK;
-    }
-
     return ch;
 }
 
