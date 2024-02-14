@@ -52,5 +52,5 @@ The same command from the previous parts works:
 make run
 ```
 
-Hopefully now you have the table printing with colour output (orange for correct letter wrong position, red for incorrect letter) and are
+Hopefully now you have the table printing with colour output (orange for correct letter wrong position, white for incorrect letter) and are
 able to guess the word! If all the letters are green, then you have won.
