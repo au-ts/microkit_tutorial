@@ -294,7 +294,7 @@ Your task now is to:
     <!-- * For the Raspberry Pi 3, the IRQ number is 93. -->
 * Inspect the serial server code (`serial_server.c`) and complete the `notified` entry point. When receiving the UART interrupt, do the following:
     1. Get the character that has been inputted via the keyboard with the `int uart_get_char()` function.
-    2. Print out the character using the `void uart_put_char()` function.
+    2. Print out the character using the `void uart_put_char(int ch)` function.
     3. Call the function `void uart_handle_irq()` for the driver to handle the IRQ.
     4. The Microkit library function `void microkit_irq_ack(microkit_channel ch)`, in order to acknowledge the IRQ.
         * Why do we need to acknowledge the IRQ? What this does is tell seL4 that we have finished handling
