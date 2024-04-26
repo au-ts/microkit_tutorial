@@ -83,7 +83,7 @@ each PD is linked with waits for events to come in. This diagram shows the contr
 Here is a description of the `protection_domain` element:
 * `name`: a unique name for the protection domain.
 * `pp`: (optional) indicates that the protection domain has a protected procedure; defaults to false.
-* `priority`: (optional) the priority of the protection domain (integer 0 to 254), defaults to 0 which is the lowest possible priority. The priority dictates which order PDs will run in. For example if there are two PDs that are both scheduable (i.e. are ready to run) then seL4
+* `priority`: (optional) the priority of the protection domain (integer 0 to 254), defaults to 0 which is the lowest possible priority. The priority dictates which order PDs will run in. For example if there are two PDs that are both schedulable (i.e. are ready to run) then seL4
 will run the higher priority one first.
 * `budget`: (optional) the PD's budget in microseconds; defaults to 1,000.
 * `period`: (optional) the PD's period in microseconds; must not be smaller than the budget; defaults to the budget.
