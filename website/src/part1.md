@@ -192,7 +192,8 @@ MON|ERROR:    dfsc = translation fault, level 2 (0x00000006) -- write not read
 
 When we start the system we get a bunch of error printing, what has happened?
 
-Well remember that by default a protection domain does not have access to any memory other than its own code.
+Remember that by default a protection domain does not have access to any memory other than its own code
+(as well as any global data and the stack region).
 
 If we look at `serial_server.c`:
 
