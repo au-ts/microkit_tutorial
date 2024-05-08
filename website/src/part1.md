@@ -208,8 +208,11 @@ So how do we prevent the virtual memory fault from happening? We need to give th
 
 ## Accessing the UART
 
-Our serial driver will be useless unless it can actually access the UART device registers. We cannot just access the physical address of
-the UART device since we in user-space programs we are in a virtual address space. So we will need to map in the physical address into our PD's virtual address space. Microkit provides an abstraction for this, it is called "Memory Regions".
+Our serial driver will be useless unless it can actually access the UART device registers. We
+cannot just access the physical address of the UART device since the driver is a user-space
+program (Protection Domain) and so has its own virtual address space.
+This means we will need to map in the physical address into our PD's virtual address space.
+Microkit provides an abstraction for this, it is called "Memory Regions".
 
 ### Memory Regions (MRs)
 
@@ -267,7 +270,7 @@ Your task now is to:
 
 ### Interrupt handling
 
-An interrupt (IRQ) is a signal from a hardware device (e.g. the UART serial device) that tells software that some event
+An interrupt request (IRQ) is a signal from a hardware device (e.g. the UART serial device) that tells software that some event
 has happened. In the case of the UART device, every time we input a character, the device will deliver an interrupt to
 seL4. In seL4, it decodes the signal and then sends the interrupt as a notification to user-space. In our system we want
 this interrupt to go to the serial server so that it can handle the interrupt.
