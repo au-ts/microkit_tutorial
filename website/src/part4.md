@@ -19,10 +19,7 @@ of device drivers. For hardware like USB or Bluetooth, there would be
 hundreds of thousands of lines of code we would have to port from Linux or something
 else to get working on seL4.
 
-**However**, there is a quicker and easier approach. We can run a virtual machine! [^1]
-
-[^1]: It is not always ideal to use virtual machines. Especially when you care about
-performance and reliability, having a native seL4 driver is typically better.
+**However**, there is a quicker and easier approach. We can run a virtual machine! [^vms]
 
 In this part, you will be shown how to run a virtual machine running Linux using
 Microkit. We will make use of the ethernet driver that already exists in Linux to
@@ -187,3 +184,8 @@ to our new word.
 After doing that and re-running the system, you should see the message `Linux user-space: Transfer word to virtual-machine monitor`.
 Hit the `RETURN` key then you should see the client interface printing again. You can now guess the
 secret word! If you do not want to guess, you can instead print out the word in the Wordle server :).
+
+---
+
+[^vms]: It is not always ideal to use virtual machines. Especially when you care about
+performance and reliability, having a native seL4 driver is typically better.

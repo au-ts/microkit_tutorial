@@ -15,7 +15,7 @@ seL4. This driver will act as a "server" that clients (in this case the Wordle c
 will send data to. The serial server then is the one actually talking to the serial
 device. The serial device that we will be using is called a Universal Asynchronous Receiver-Transmitter (UART).
 
-Below is a diagram of what we will end up with by the end of this part[^1]:
+Below is a diagram of what we will end up with by the end of this part[^mmio]:
 
 
 <!-- In implementing Wordle we will need to be able to both receive serial input and produce serial output. This is so we can have a client that receives characters on input and outputs an ASCII interface for the player to use. Our initial goal will be to have a "serial server" that will facilitate reading and writing characters using the UART. -->
@@ -23,8 +23,6 @@ Below is a diagram of what we will end up with by the end of this part[^1]:
 <!-- ![Serial server architecture diagram](assets/part1/overview.svg) -->
 
 <p><img height="350" src="assets/part1/overview.svg" alt="Serial server overview" /></p>
-
-[^1]: MMIO stands for "Memory Mapped Input/Output". It is a way of interacting with certain hardware via memory, in this case the UART device.
 
 ## Creating a serial server
 
@@ -51,11 +49,9 @@ cannot do much except execute its code.
 A protection domain is an abstraction created by Microkit and is made up of various seL4 primitives. The main ones are:
 * A thread-control-block (TCB), because in order to actually have a thread of execution, seL4 needs to create a thread.
 * A virtual address-space, known as a VSpace. This is what memory the kernel allows the PD to access. By default all that
-  is in the VSpace is the ELF[^2] of the PD, so it can execute its own code, and nothing else.
+  is in the VSpace is the ELF[^elf] of the PD, so it can execute its own code, and nothing else.
 * A capability space, known as a CSpace. Each protection domain has its own CSpace which is a data structure that holds all the capabilities
   that a PD has access to.
-
-[^2]: ELF stands for Executable and Linkable Format, it is just a standard format to compile programs into.
 
 As you can see, there is not lot a PD can actually do by default. And this is **intentional**. We do not want PDs
 to be able to access anything unless we explicitly allow it. This is allowed by the capability system, as all resources
@@ -286,7 +282,7 @@ In the Microkit system description, we need to register these interrupts and ass
 
 The `irq` element is a child element of `protection_domain` (just like `program_image`), and has the following attributes:
 * `irq`: The hardware interrupt number.
-* `id`: The channel identifier, an integer from 0 to 62.
+* `id`: The channel identifier, an integer from 0 to 62[^limits].
 
 The channel identifier is what's used by a PD to distinguish a particular interrupt from other interrupts or other notification sources.
 For example, if you had `<irq id="0" irq="20" />` this would mean that whenever we get the interrupt number `20` from the hardware, the
@@ -306,3 +302,12 @@ Your task now is to:
           another UART IRQ again!
 
 Now we can check to see that we are actually receiving interrupts. When you input a character, it should be printing as well. If that is working, you can move on to [the next exercise](https://trustworthy.systems/projects/TS/microkit/tutorial/part2.html).
+
+---
+
+[^mmio]: MMIO stands for "Memory Mapped Input/Output". It is a way of interacting with certain hardware via memory, in this case the UART device.
+
+[^elf]: ELF stands for Executable and Linkable Format, it is just a standard format to compile programs into.
+
+[^limits]: You might find this number a bit unexpected, as it is not a power of two. You can
+find more details in the Microkit manual [here](https://github.com/seL4/microkit/blob/main/docs/manual.md#limits).
