@@ -13,9 +13,9 @@ implements the [Wordle game](https://www.nytimes.com/games/wordle/index.html). I
 not familiar with Wordle, it is a simple word guessing game. Through implementing the game,
 you will see how systems are constructed on seL4 using Microkit. This Wordle system, while
 largely a toy, does represent a realistic architecture as there is:
-* a driver (to allow the user to input)
+* a device driver (to allow the user to input a word)
 * a trusted server (which has the secret word)
-* a untrusted client (which guesses what the word is based on user input)
+* an untrusted client (which guesses what the word is based on user input)
 
 All of these are isolated components that then communicate via seL4 and Microkit.
 
