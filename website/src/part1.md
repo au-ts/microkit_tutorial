@@ -279,7 +279,7 @@ finishes, the PD will go back to waiting to receive more events (such as more in
 In the Microkit system description, we need to register these interrupts and associate them with a certain PD. This is because like with memory, IRQs are also modelled by capabilities meaning that we need to have the capability to a certain interrupt, before it can be delivered to a PD by seL4.
 
 The `irq` element is a child element of `protection_domain` (just like `program_image`), and has the following attributes:
-* `irq`: The hardware interrupt number.
+* `irq`: The interrupt number.
 * `id`: The channel identifier, an integer from 0 to 62[^limits].
 
 The channel identifier is what's used by a PD to distinguish a particular interrupt from other interrupts or other notification sources.
@@ -288,7 +288,7 @@ For example, if you had `<irq id="0" irq="20" />` this would mean that whenever 
 
 Your task now is to:
 * Specify the interrupt for serial input in the system description.
-    * For the QEMU platform, the IRQ number is 33.
+    * For the QEMU platform, the IRQ number is 33[^irq].
     <!-- * For the Raspberry Pi 3, the IRQ number is 93. -->
 * Inspect the serial server code (`serial_server.c`) and complete the `notified` entry point. When receiving the UART interrupt, do the following:
     1. Get the character that has been inputted via the keyboard with the `int uart_get_char()` function.
@@ -309,3 +309,17 @@ Now we can check to see that we are actually receiving interrupts. When you inpu
 
 [^limits]: You might find this number a bit unexpected, as it is not a power of two. You can
 find more details in the Microkit manual [here](https://github.com/seL4/microkit/blob/main/docs/manual.md#limits).
+
+[^irq]: You may be wondering how we know this number. On ARM and RISC-V platforms, there are two main ways to
+        find out the IRQ number for a specific hardware device. One is via official documentation like a
+        'Technical Reference Manual', the other is by inspecting something called the Device Tree Source. This
+        is a file associated with a particular hardware platform, like the QEMU platform or a particular Raspberry Pi
+        model for example. These 'Device Trees' contain information such as what the physical address is of a device,
+        and what interrupt number(s) it uses. It should be noted that when registering an IRQ with Microkit/seL4, you
+        must have the **CPU observable** number, which may not be the same number as the one in the DTS. For example, on
+        ARM peripheral devices (such as UARTs) are offset by 32. In our case, the DTS says the UART devices has an IRQ
+        with number 1, which means that when we want to use it in Microkit/seL4, it becomes 33.
+		When working on ARM platforms, you can find more information
+        [here](https://developer.arm.com/documentation/den0024/a/AArch64-Exception-Handling/The-Generic-Interrupt-Controller).
+
+
