@@ -276,8 +276,6 @@ In the serial server code (`serial_server.c`) you will see the `notified(microki
 happen is that whenever we get an interrupt form the UART the `notified` entry point is executed. Then we can handle the interrupt and once `notified`
 finishes, the PD will go back to waiting to receive more events (such as more interrupts).
 
-<!-- In order to handle serial input, we need to set up the serial server to receive hardware interrupts and handle them accordingly. Interrupts are delivered as notifications via the `notified(microkit_channel ch)` entry point. Receiving an interrupt or notification causes this entry point to be invoked. Once the call to `notified` finishes, the PD will go back to waiting to receive other messages (notifications and protected procedure). -->
-
 In the Microkit system description, we need to register these interrupts and associate them with a certain PD. This is because like with memory, IRQs are also modelled by capabilities meaning that we need to have the capability to a certain interrupt, before it can be delivered to a PD by seL4.
 
 The `irq` element is a child element of `protection_domain` (just like `program_image`), and has the following attributes:
