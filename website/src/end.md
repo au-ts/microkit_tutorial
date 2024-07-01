@@ -15,12 +15,12 @@ If you have any questions or feedback, feel free to open an issue on [the GitHub
 
 ## Solutions
 
-The solutions are available for download from [here](https://{{LEARNMICROKIT_DOWNLOADS_URL}}/solutions.tar.gz).
+The solutions are available for download from [here](https://{{TUTORIAL_DOWNLOADS_URL}}/solutions.tar.gz).
 
 Alternatively you can download them via:
 ```sh
 # Make sure to run these commands in the microkit_tutorial directory created in part 0
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/solutions.tar.gz -o solutions.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/solutions.tar.gz -o solutions.tar.gz
 tar xf solutions.tar.gz
 ```
 

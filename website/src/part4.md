@@ -23,10 +23,10 @@ else to get working on seL4.
 
 In this part, you will be shown how to run a virtual machine running Linux using
 Microkit. We will make use of the ethernet driver that already exists in Linux to
-talk to a server `{{LEARNMICROKIT_WORD_URL}}` that responds with a new five-letter word
+talk to a server `{{TUTORIAL_WORD_URL}}` that responds with a new five-letter word
 on every request.
 
-If you do `wget -qO- {{LEARNMICROKIT_WORD_URL}}`, you should see a new word each time
+If you do `wget -qO- {{TUTORIAL_WORD_URL}}`, you should see a new word each time
 you run the command.
 
 ## Virtual machines on seL4
@@ -51,7 +51,7 @@ the virtual machine to be able to mess with any other interrupts in the system, 
 
 ## Integrating with the Wordle system
 
-Our goal is to have a Linux virtual machine start that then gets the word from `{{LEARNMICROKIT_WORD_URL}}` which
+Our goal is to have a Linux virtual machine start that then gets the word from `{{TUTORIAL_WORD_URL}}` which
 it sends to the VMM for it to give to the Wordle server.
 
 In the (development version of) Microkit it is possible to describe a VM using the `virtual_machine` element. It is

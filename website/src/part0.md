@@ -47,7 +47,7 @@ You can get the SDK with:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
@@ -66,7 +66,7 @@ For Apple Silicon (ARM64) Macs to get the SDK you can do the following:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/sdk-macos-arm64.tar.gz -o sdk.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-macos-arm64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
@@ -76,7 +76,7 @@ For Intel (x86) Macs to get the SDK you can do the following:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/sdk-macos-x64.tar.gz -o sdk.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-macos-x64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 <!-- 
@@ -100,7 +100,7 @@ cd microkit_tutorial
 # Then start the Docker container
 container
 # Then download and extract the SDK
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
@@ -122,7 +122,7 @@ I expect the majority of people to be doing the workshop via a simulator. Howeve
 
 ```sh
 # Download and extract the tutorial code (in the microkit_tutorial directory)
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/tutorial.tar.gz -o tutorial.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/tutorial.tar.gz -o tutorial.tar.gz
 tar xf tutorial.tar.gz
 ```
 

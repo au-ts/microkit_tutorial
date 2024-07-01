@@ -14,7 +14,7 @@ I have packaged up all the required binaries in order to get booting into U-Boot
 
 Download and extract the binaries to your microSD card with the following commands:
 ```sh
-curl -L {{LEARNMICROKIT_DOWNLOADS_URL}}/rpi3b.tar.gz -o rpi3b.tar.gz
+curl -L {{TUTORIAL_DOWNLOADS_URL}}/rpi3b.tar.gz -o rpi3b.tar.gz
 tar xvf rpi3b.tar.gz --directory /path/to/sdcard
 ```
 
