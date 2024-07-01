@@ -1,7 +1,7 @@
 # If you would like to choose a different path to the SDK, you can pass it as an
 # argument.
 ifndef MICROKIT_SDK
-	MICROKIT_SDK := ../sdk
+	MICROKIT_SDK := ../microkit-sdk-1.3.0
 endif
 
 # In case the default compiler triple doesn't work for you or your package manager
@@ -20,7 +20,7 @@ ifndef TOOLCHAIN
 	endif
 endif
 
-BOARD := qemu_arm_virt
+BOARD := qemu_virt_aarch64
 MICROKIT_CONFIG := debug
 BUILD_DIR := build
 

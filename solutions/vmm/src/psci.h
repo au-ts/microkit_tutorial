@@ -6,6 +6,7 @@
  */
 
 #include <microkit.h>
+#include <stdint.h>
 
 /* Values in this file are taken from the:
  * ARM Power State Coordination Interface

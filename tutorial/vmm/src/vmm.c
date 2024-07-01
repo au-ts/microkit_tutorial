@@ -74,7 +74,7 @@ static bool handle_vppi_event()
         // Acknowledge to unmask it as our guest will not use the interrupt
         // @ivanv: We're going to assume that we only have one VCPU and that the
         // cap is the base one.
-        microkit_arm_vcpu_ack_vppi(GUEST_ID, ppi_irq);
+        microkit_vcpu_arm_ack_vppi(GUEST_ID, ppi_irq);
     }
 
     return true;
@@ -137,7 +137,7 @@ static bool handle_vm_fault()
             char character = fault_get_data(&regs, fsr);
             word[(addr - WORDLE_BUFFER_ADDR) / sizeof(char)] = character;
             if (addr == WORDLE_BUFFER_ADDR + (WORDLE_BUFFER_SIZE - sizeof(char))) {
-                microkit_vm_stop(GUEST_ID);
+                microkit_vcpu_stop(GUEST_ID);
                 microkit_msginfo msg = microkit_msginfo_new(0, WORDLE_WORD_SIZE);
                 for (int i = 0; i < WORDLE_WORD_SIZE; i++) {
                     microkit_mr_set(i, word[i]);
@@ -173,7 +173,7 @@ static bool handle_vm_fault()
 
 static void vppi_event_ack(uint64_t vcpu_id, int irq, void *cookie)
 {
-    microkit_arm_vcpu_ack_vppi(GUEST_ID, irq);
+    microkit_vcpu_arm_ack_vppi(GUEST_ID, irq);
 }
 
 static void sgi_ack(uint64_t vcpu_id, int irq, void *cookie) {}
@@ -286,7 +286,7 @@ void guest_start(void) {
     // Set the PC to the kernel image's entry point and start the thread.
     LOG_VMM("starting guest at 0x%lx, DTB at 0x%lx, initial RAM disk at 0x%lx\n",
         regs.pc, regs.x0, GUEST_INIT_RAM_DISK_VADDR);
-    microkit_vm_restart(GUEST_ID, regs.pc);
+    microkit_vcpu_restart(GUEST_ID, regs.pc);
 }
 
 #define SCTLR_EL1_UCI       (1 << 26)     /* Enable EL0 access to DC CVAU, DC CIVAC, DC CVAC,
@@ -308,14 +308,14 @@ void guest_start(void) {
 
 void guest_stop(void) {
     LOG_VMM("Stopping guest\n");
-    microkit_vm_stop(GUEST_ID);
+    microkit_vcpu_stop(GUEST_ID);
     LOG_VMM("Stopped guest\n");
 }
 
 bool guest_restart(void) {
     LOG_VMM("Attempting to restart guest\n");
     // First, stop the guest
-    microkit_vm_stop(GUEST_ID);
+    microkit_vcpu_stop(GUEST_ID);
     LOG_VMM("Stopped guest\n");
     // Then, we need to clear all of RAM
     LOG_VMM("Clearing guest RAM\n");
@@ -327,38 +327,38 @@ bool guest_restart(void) {
         return false;
     }
     // Reset registers
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_SCTLR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_TTBR0, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_TTBR1, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_TCR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_MAIR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_AMAIR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CIDR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_SCTLR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_TTBR0, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_TTBR1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_TCR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_MAIR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AMAIR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CIDR, 0);
     /* other system registers EL1 */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_ACTLR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CPACR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ACTLR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CPACR, 0);
     /* exception handling registers EL1 */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_AFSR0, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_AFSR1, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_ESR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_FAR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_ISR, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_VBAR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AFSR0, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AFSR1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ESR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_FAR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ISR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_VBAR, 0);
     /* thread pointer/ID registers EL0/EL1 */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_TPIDR_EL1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_TPIDR_EL1, 0);
 #if CONFIG_MAX_NUM_NODES > 1
     /* Virtualisation Multiprocessor ID Register */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_VMPIDR_EL2, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_VMPIDR_EL2, 0);
 #endif /* CONFIG_MAX_NUM_NODES > 1 */
     /* general registers x0 to x30 have been saved by traps.S */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_SP_EL1, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_ELR_EL1, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_SPSR_EL1, 0); // 32-bit
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_SP_EL1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ELR_EL1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_SPSR_EL1, 0); // 32-bit
     /* generic timer registers, to be completed */
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CNTV_CTL, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CNTV_CVAL, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CNTVOFF, 0);
-    microkit_arm_vcpu_write_reg(GUEST_ID, seL4_VCPUReg_CNTKCTL_EL1, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CNTV_CTL, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CNTV_CVAL, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CNTVOFF, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CNTKCTL_EL1, 0);
     // Now we need to re-initialise all the VMM state
     guest_start();
     LOG_VMM("Restarted guest\n");
@@ -403,12 +403,12 @@ notified(microkit_channel ch)
     }
 }
 
-void
-fault(microkit_id id, microkit_msginfo msginfo)
+seL4_Bool
+fault(microkit_child id, microkit_msginfo msginfo, microkit_msginfo *reply_msginfo)
 {
     if (id != GUEST_ID) {
         LOG_VMM_ERR("Unexpected faulting PD/VM with id %d\n", id);
-        return;
+        return seL4_False;
     }
     // This is the primary fault handler for the guest, all faults that come
     // from seL4 regarding the guest will need to be handled here.
@@ -435,15 +435,17 @@ fault(microkit_id id, microkit_msginfo msginfo)
             break;
         default:
             LOG_VMM_ERR("unknown fault, stopping VM with ID %d\n", id);
-            microkit_vm_stop(id);
-            return;
+            microkit_vcpu_stop(id);
+            return seL4_False;
             // @ivanv: print out the actual fault details
     }
 
     if (!success) {
         LOG_VMM_ERR("Failed to handle %s fault\n", fault_to_string(label));
-    } else {
-        /* Now that we have handled the fault, we reply to it so that the guest can resume execution. */
-        reply_to_fault();
+        return seL4_False;
     }
+
+    *reply_msginfo = microkit_msginfo_new(0, 0);
+
+    return seL4_True;
 }

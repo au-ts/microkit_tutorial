@@ -47,7 +47,7 @@ You can get the SDK with:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
+curl -L https://github.com/seL4/microkit/releases/download/1.3.0/microkit-sdk-1.3.0-linux-x86-64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
@@ -66,7 +66,7 @@ For Apple Silicon (ARM64) Macs to get the SDK you can do the following:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-macos-arm64.tar.gz -o sdk.tar.gz
+curl -L https://github.com/seL4/microkit/releases/download/1.3.0/microkit-sdk-1.3.0-macos-aarch64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
@@ -76,7 +76,7 @@ For Intel (x86) Macs to get the SDK you can do the following:
 mkdir microkit_tutorial
 cd microkit_tutorial
 # Then download and extract the SDK
-curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-macos-x64.tar.gz -o sdk.tar.gz
+curl -L https://github.com/seL4/microkit/releases/download/1.3.0/microkit-sdk-1.3.0-macos-x86-64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 <!-- 
@@ -100,7 +100,7 @@ cd microkit_tutorial
 # Then start the Docker container
 container
 # Then download and extract the SDK
-curl -L {{TUTORIAL_DOWNLOADS_URL}}/sdk-linux-x64.tar.gz -o sdk.tar.gz
+curl -L https://github.com/seL4/microkit/releases/download/1.3.0/microkit-sdk-1.3.0-linux-x86-64.tar.gz -o sdk.tar.gz
 tar xf sdk.tar.gz
 ```
 
