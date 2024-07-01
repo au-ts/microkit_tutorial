@@ -87,10 +87,11 @@ for you to copy-and-paste into your `wordle.system`. There are comments to help 
     <map mr="guest_ram" vaddr="0x40000000" perms="rw"
         setvar_vaddr="guest_ram_vaddr" />
     <!--
-        Create the virtual machine, the `id` is used for the
+        Create the virtual machine, the vCPU `id` is used for the
         VMM to refer to the VM. Similar to channels and IRQs.
     -->
-    <virtual_machine name="linux" id="0" priority="100">
+    <virtual_machine name="linux" priority="100">
+        <vcpu id="0" />
         <map mr="guest_ram" vaddr="0x40000000" perms="rwx" />
         <map mr="ethernet" vaddr="0xa003000" perms="rw" cached="false" />
         <map mr="uart" vaddr="0x9000000" perms="rw" cached="false" />
