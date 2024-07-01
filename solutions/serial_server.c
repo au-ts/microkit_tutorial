@@ -26,6 +26,17 @@ int uart_get_char() {
         ch = *REG_PTR(uart_base_vaddr, UARTDR) & RHR_MASK;
     }
 
+    /*
+     * Convert Newline to Carriage return; backspace to DEL
+     */
+    switch (ch) {
+    case '\n':
+        ch = '\r';
+        break;
+    case 8:
+        ch = 0x7f;
+        break;
+    }
     return ch;
 }
 

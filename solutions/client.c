@@ -12,6 +12,10 @@ uintptr_t client_to_serial_vaddr;
 
 #define MOVE_CURSOR_UP "\033[5A"
 #define CLEAR_TERMINAL_BELOW_CURSOR "\033[0J"
+#define GREEN "\033[32;1;40m"
+#define YELLOW "\033[39;103m"
+#define DEFAULT_COLOUR "\033[0m"
+
 
 #define INVALID_CHAR (-1)
 
@@ -72,8 +76,8 @@ void print_table(bool clear_terminal) {
             if (ch != INVALID_CHAR) {
                 switch (state) {
                     case INCORRECT: break;
-                    case CORRECT_PLACEMENT: serial_send("\x1B[32m"); break;
-                    case INCORRECT_PLACEMENT: serial_send("\x1B[33m"); break;
+                    case CORRECT_PLACEMENT: serial_send(GREEN); break;
+                    case INCORRECT_PLACEMENT: serial_send(YELLOW); break;
                     default:
                         // Print out error messages/debug info via debug output
                         microkit_dbg_puts("CLIENT|ERROR: unexpected character state\n");
@@ -81,7 +85,7 @@ void print_table(bool clear_terminal) {
                 char ch_str[] = { ch, '\0' };
                 serial_send(ch_str);
                 // Reset colour
-                serial_send("\x1B[0m");
+                serial_send(DEFAULT_COLOUR);
             } else {
                 serial_send(" ");
             }
