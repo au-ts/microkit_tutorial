@@ -1,7 +1,5 @@
 # Part 4 - Virtual machines
 
-*Note: virtual machines are currently an experimental feature of Microkit*
-
 Now that you have a playable Wordle, you will notice that the word to guess
 is always "hello" and does not change. That is a bit boring and not realistic.
 
