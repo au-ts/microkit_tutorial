@@ -1,6 +1,6 @@
 # Welcome
 
-Welcome to the tutorial for the seL4 Microkit (formerly called the seL4 Core Platform).
+Welcome to the tutorial for the seL4 Microkit.
 
 To complete this tutorial, you will need:
 * A laptop or computer with access to the internet.
