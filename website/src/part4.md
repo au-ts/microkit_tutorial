@@ -52,7 +52,7 @@ the virtual machine to be able to mess with any other interrupts in the system, 
 Our goal is to have a Linux virtual machine start that then gets the word from `{{TUTORIAL_WORD_URL}}` which
 it sends to the VMM for it to give to the Wordle server.
 
-In the Microkit it is possible to describe a VM using the `virtual_machine` element. It is
+In Microkit it is possible to describe a VM using the `virtual_machine` element. It is
 very similar to a PD in that it has its own TCB, VSpace and CSpace.
 
 There are a few pieces in order to create a VMM and VM in the system description, so I have given the description
