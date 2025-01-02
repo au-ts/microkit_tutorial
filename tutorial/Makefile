@@ -1,7 +1,7 @@
 # If you would like to choose a different path to the SDK, you can pass it as an
 # argument.
 ifndef MICROKIT_SDK
-	MICROKIT_SDK := ../microkit-sdk-1.4.0
+	MICROKIT_SDK := ../microkit-sdk-1.4.1
 endif
 
 # In case the default compiler triple doesn't work for you or your package manager
