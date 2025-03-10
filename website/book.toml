@@ -14,8 +14,13 @@ theme = "microkit_theme"
 default-theme = "microkit_theme"
 preferred-dark-theme = "microkit_theme"
 git-repository-url = "https://github.com/au-ts/microkit_tutorial"
+additional-css = ["microkit_theme/tabs.css"]
+additional-js = ["microkit_theme/tabs.js"]
 
 [preprocessor.variables]
 use_env = true
 
 [preprocessor.variables.variables]
+
+[preprocessor.tabs]
+

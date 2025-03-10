@@ -23,7 +23,7 @@ Install the mdBook tool and `mdbook-variables` preprocessor using
 [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html).
 
 ```sh
-cargo install --locked mdbook-variables mdbook
+cargo install --locked mdbook-variables mdbook-tabs mdbook
 ```
 
 #### Developing and making changes to the website

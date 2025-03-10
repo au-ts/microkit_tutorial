@@ -5,7 +5,7 @@
     <memory_region name="client_to_serial" size="0x1000" />
     <memory_region name="serial_to_client" size="0x1000" />
 
-    <protection_domain name="wordle_server" priority="254" pp="true">
+    <protection_domain name="wordle_server" priority="254">
         <program_image path="wordle_server.elf" />
     </protection_domain>
 
@@ -17,7 +17,7 @@
         <irq irq="33" id="1" />
     </protection_domain>
 
-    <protection_domain name="client" priority="253" pp="true">
+    <protection_domain name="client" priority="253">
         <program_image path="client.elf" />
         <map mr="serial_to_client" vaddr="0x4000000" perms="r" setvar_vaddr="serial_to_client_vaddr"/>
         <map mr="client_to_serial" vaddr="0x4001000" perms="rw" setvar_vaddr="client_to_serial_vaddr"/>
@@ -29,7 +29,7 @@
     </channel>
 
     <channel>
-        <end pd="client" id="2" />
+        <end pd="client" id="2" pp="true" />
         <end pd="wordle_server" id="1" />
     </channel>
 
@@ -77,7 +77,7 @@
     </protection_domain>
 
     <channel>
-        <end pd="vmm" id="1" />
+        <end pd="vmm" id="1" pp="true" />
         <end pd="wordle_server" id="2" />
     </channel>
 </system>

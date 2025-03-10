@@ -30,7 +30,7 @@ When a PD's protected procedure is invoked, the protected entry point is invoked
 
 Your task now is to:
 * Add a Wordle server PD (using the program image `wordle_server.elf`).
-* Add the ability to invoke the Wordle server's protected procedure from the client. This means creating a channel between the two PDs and setting `pp="true"` on the Wordle server's `protection_domain` element.
+* Add the ability to invoke the Wordle server's protected procedure from the client. This means creating a channel between the two PDs and setting `pp="true"` on the Wordle server end of the channel.
 * On the client side, implement `wordle_server_send` to send the user-inputted word from the client to the Wordle server.
     * Do this using message registers by setting each character of the word from the client to the Wordle server.
 * On the Wordle server side, implement the protected entry point `microkit_msginfo protected(microkit_channel ch, microkit_msginfo msginfo)`.

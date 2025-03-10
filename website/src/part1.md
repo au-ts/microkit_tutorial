@@ -78,7 +78,6 @@ each PD is linked with waits for events to come in. This diagram shows the contr
 
 Here is a description of the `protection_domain` element:
 * `name`: a unique name for the protection domain.
-* `pp`: (optional) indicates that the protection domain has a protected procedure; defaults to false.
 * `priority`: (optional) the priority of the protection domain (integer 0 to 254), defaults to 0 which is the lowest possible priority. The priority dictates which order PDs will run in. For example if there are two PDs that are both schedulable (i.e. are ready to run) then seL4
 will run the higher priority one first.
 * `budget`: (optional) the PD's budget in microseconds; defaults to 1,000.
@@ -319,7 +318,5 @@ find more details in the Microkit manual [here](https://github.com/seL4/microkit
         must have the **CPU observable** number, which may not be the same number as the one in the DTS. For example, on
         ARM peripheral devices (such as UARTs) are offset by 32. In our case, the DTS says the UART devices has an IRQ
         with number 1, which means that when we want to use it in Microkit/seL4, it becomes 33.
-		When working on ARM platforms, you can find more information
-        [here](https://developer.arm.com/documentation/den0024/a/AArch64-Exception-Handling/The-Generic-Interrupt-Controller).
 
 
