@@ -16,7 +16,6 @@ uintptr_t client_to_serial_vaddr;
 #define YELLOW "\033[39;103m"
 #define DEFAULT_COLOUR "\033[0m"
 
-
 #define INVALID_CHAR (-1)
 
 struct wordle_char {
