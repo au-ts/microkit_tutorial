@@ -187,4 +187,4 @@ secret word! If you do not want to guess, you can instead print out the word in 
 ---
 
 [^vms]: It is not always ideal to use virtual machines. Especially when you care about
-performance and reliability, having a native seL4 driver is typically better.
+        performance and reliability, having a native seL4 driver is typically better.

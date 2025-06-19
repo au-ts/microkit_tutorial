@@ -307,7 +307,7 @@ Now we can check to see that we are actually receiving interrupts. When you inpu
 [^elf]: ELF stands for Executable and Linkable Format, it is just a standard format to compile programs into.
 
 [^limits]: You might find this number a bit unexpected, as it is not a power of two. You can
-find more details in the Microkit manual [here](https://github.com/seL4/microkit/blob/main/docs/manual.md#limits).
+        find more details in the Microkit manual [here](https://github.com/seL4/microkit/blob/main/docs/manual.md#limits).
 
 [^irq]: You may be wondering how we know this number. On ARM and RISC-V platforms, there are two main ways to
         find out the IRQ number for a specific hardware device. One is via official documentation like a
