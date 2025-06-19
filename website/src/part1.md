@@ -298,7 +298,7 @@ Your task now is to:
           the IRQ and are ready to receive another one. If we do not acknowledge it, we will never receive
           another UART IRQ again!
 
-Now we can check to see that we are actually receiving interrupts. When you input a character, it should be printing as well. If that is working, you can move on to [the next exercise](https://trustworthy.systems/projects/microkit/tutorial/part2.html).
+Now we can check to see that we are actually receiving interrupts. When you input a character, it should be printing as well. If that is working, you can move on to [the next exercise](part2.md).
 
 ---
 
