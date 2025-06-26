@@ -11,7 +11,7 @@ If you have any questions or feedback, feel free to open an issue on [the GitHub
 * [Trustworthy Systems homepage](https://trustworthy.systems/)
 * [seL4 source code](https://github.com/seL4/seL4)
 * [Microkit source code](https://github.com/seL4/microkit)
-* [Experimental virtual-machine-monitor used in part 4](https://github.com/au-ts/libvmm)
+* [Virtual-machine-monitor used in part 4](https://github.com/au-ts/libvmm)
 
 ## Solutions
 

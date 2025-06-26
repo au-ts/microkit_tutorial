@@ -19,7 +19,7 @@ We have two options for working on the tutorial:
 You'll need the following dependencies:
 * Make
 * AAarch64 cross compiler
-* QEMU simulator for running the tutorials
+* QEMU simulator for running the tutorial
 * The Microkit SDK
 
 {{#tabs }}
