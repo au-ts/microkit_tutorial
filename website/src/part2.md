@@ -153,10 +153,10 @@ If we wanted to have two PDs that share a buffer to avoid costly IPC to send dat
 <details><summary>Reference for memory region and map elements</summary>
 
 `memory_region`:
-* `name`: a unique name for the memory region.
-* `size`: size of the memory region in bytes (must be a multiple of the page size).
-* `page_size`: (optional) size of the pages used in the memory region; must be a supported page size if provided (4KiB or 2MiB on AArch64). By default it is 4KiB.
-* `phys_addr`: (optional) the physical address for the start of the memory region.
+* `name`: A unique name for the memory region
+* `size`: Size of the memory region in bytes (must be a multiple of the page size)
+* `page_size`: (optional) Size of the pages used in the memory region; must be a supported page size if provided. Defaults to the largest page size for the target architecture that the memory region is aligned to.
+* `phys_addr`: (optional) The physical address for the start of the memory region (must be a multiple of the page size).
 
 `map`:
 * `mr`: Identifies the memory region to map.

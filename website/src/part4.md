@@ -133,7 +133,7 @@ adding dns 10.0.2.3
 Linux user-space: Send request to trustworthy.systems/projects/microkit/tutorial/word
 Linux user-space: Received word
 Linux user-space: Transfer word to virtual-machine monitor
-<<seL4(CPU 0) [decodeInvocation/645 T0x806000ac00 "child of: 'rootserver'" @200288]: Attempted to invoke a null cap #75.>>
+vmm microkit_ppcall: invalid channel given '1'
 ```
 
 What is happening here? Well after Linux boots it starts the initial task I have added a script that will
@@ -149,13 +149,13 @@ memory that the VM does not have access to, this will cause a virtual memory fau
 You will notice that this is not particularly efficient, especially if we were doing this process with large amounts of data.
 Fortunately, other methods such as the virtIO standard exist. But for this tutorial, that is out of scope.
 
-If we look at the last line of the system:
+If we look at the last line of the output:
 ```
-<<seL4(CPU 0) [decodeInvocation/645 T0x806000ac00 "child of: 'rootserver'" @200288]: Attempted to invoke a null cap #75.>>
+vmm microkit_ppcall: invalid channel given '1'
 ```
 
 What is happening is that the VMM is trying to perform a PPC to send the word to the Wordle server. However, as we do not have a
-channel, we are trying to invoke a channel (and hence a capability) that does not exist! Hence the seL4 error print.
+channel, we are trying to invoke a channel that does not exist!
 
 We can easily fix this by creating a channel between the VMM and the Wordle server:
 ```xml
