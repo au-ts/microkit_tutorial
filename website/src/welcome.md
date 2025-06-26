@@ -9,7 +9,7 @@ To complete this tutorial, you will need:
 ## Getting started
 
 In this tutorial, you will be completing multiple exercises to end up with a system that
-implements the [Wordle game](https://www.nytimes.com/games/wordle/index.html). If you are
+implements the [Wordle game](https://en.wikipedia.org/wiki/Wordle). If you are
 not familiar with Wordle, it is a simple word guessing game. Through implementing the game,
 you will see how systems are constructed on seL4 using Microkit. This Wordle system, while
 largely a toy, does represent a realistic architecture as there is:
