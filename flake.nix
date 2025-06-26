@@ -6,7 +6,7 @@
   description = "A flake for the seL4 Microkit tutorial";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
   };
 
   outputs = { nixpkgs, ... }:
@@ -51,6 +51,7 @@
                 pkgsCross.aarch64-embedded.stdenv.cc
                 qemu
                 gnumake
+                curl
               ];
               # To avoid Nix adding compiler flags that are not available on a freestanding
               # environment.
