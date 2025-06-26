@@ -213,10 +213,10 @@ Microkit provides an abstraction for this, it is called "Memory Regions".
 ### Memory Regions (MRs)
 
 We can create memory regions at a specific physical address, or somewhere in RAM, that we can then map into the address space of whichever PD we want to have access to it. Here is a full description of the `memory_region` element which you would use to create a memory region:
-* `name`: a unique name for the memory region.
-* `size`: size of the memory region in bytes (must be a multiple of the page size).
-* `page_size`: (optional) size of the pages used in the memory region; must be a supported page size if provided (4KiB or 2MiB on AArch64). By default it is 4KiB.
-* `phys_addr`: (optional) the physical address for the start of the memory region.
+* `name`: A unique name for the memory region
+* `size`: Size of the memory region in bytes (must be a multiple of the page size)
+* `page_size`: (optional) Size of the pages used in the memory region; must be a supported page size if provided. Defaults to the largest page size for the target architecture that the memory region is aligned to.
+* `phys_addr`: (optional) The physical address for the start of the memory region (must be a multiple of the page size).
 
 In order to access the memory region from a PD, it needs to be mapped using the `map` element:
 * `mr`: Identifies the memory region to map.
