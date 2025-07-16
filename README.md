@@ -4,7 +4,7 @@ The [seL4 Microkit](https://github.com/seL4/Microkit) is a
 minimal operating system framework made for developing systems using the seL4
 microkernel.
 
-The tutorial is available [here](https://trustworthy.systems/projects/microkit/tutorial).
+The tutorial is available [here](https://docs.sel4.systems/projects/microkit/tutorial/welcome.html).
 
 This repository contains the infrastructure and material for the tutorial. If
 you are developing the tutorial itself, the rest of the README is for you.
