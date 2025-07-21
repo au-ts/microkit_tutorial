@@ -220,10 +220,11 @@ We can create memory regions at a specific physical address, or somewhere in RAM
 
 In order to access the memory region from a PD, it needs to be mapped using the `map` element:
 * `mr`: Identifies the memory region to map.
-* `vaddr`: Identifies the virtual address at which to map the memory region to.
-* `perms`: Identifies the permissions with which to map the memory region with. Can be any combination of r (read), w (write), and x (eXecute).
-* `cached`: Determines if region is mapped with caching enabled or disabled. Defaults to true.
-* `setvar_vaddr`: Specifies a symbol in the program image. This symbol will be rewritten with the virtual address of the memory region.
+* `vaddr`: Identifies the virtual address at which to map the memory region.
+* `perms`: Identifies the permissions with which to map the memory region. Can be a combination of `r` (read), `w` (write), and `x` (eXecute), with the exception of a write-only mapping (just `w`).
+* `cached`: (optional) Determines if mapped with caching enabled or disabled. Defaults to `true`.
+* `setvar_vaddr`: (optional) Specifies a symbol in the program image. This symbol will be rewritten with the virtual address of the memory region.
+* `setvar_size`: (optional) Specifies a symbol in the program image. This symbol will be rewritten with the size of the memory region.
 
 #### Example
 
