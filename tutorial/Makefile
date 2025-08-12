@@ -10,11 +10,14 @@ ifndef TOOLCHAIN
 	# Get whether the common toolchain triples exist
 	TOOLCHAIN_AARCH64_LINUX_GNU := $(shell command -v aarch64-linux-gnu-gcc 2> /dev/null)
 	TOOLCHAIN_AARCH64_UNKNOWN_LINUX_GNU := $(shell command -v aarch64-unknown-linux-gnu-gcc 2> /dev/null)
+	TOOLCHAIN_AARCH64_NONE_ELF := $(shell command -v aarch64-none-elf-gcc 2> /dev/null)
 	# Then check if they are defined and select the appropriate one
 	ifdef TOOLCHAIN_AARCH64_LINUX_GNU
 		TOOLCHAIN := aarch64-linux-gnu
 	else ifdef TOOLCHAIN_AARCH64_UNKNOWN_LINUX_GNU
 		TOOLCHAIN := aarch64-unknown-linux-gnu
+	else ifdef TOOLCHAIN_AARCH64_NONE_ELF
+		TOOLCHAIN := aarch64-none-elf
 	else
 		$(error "Could not find an AArch64 cross-compiler")
 	endif
