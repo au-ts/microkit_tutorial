@@ -85,19 +85,13 @@ tar xf sdk.tar.gz
 {{#endtab }}
 {{#endtabs }}
 
-<!-- 
-### Option 2 - Nix
-
-With this line, you can get all the dependencies in a Nix shell:
-```sh
-
-``` -->
-
 {{#endtab }}
 {{#tab name="Nix" }}
 
 The development shell will give you all the depenencies you need:
 ```sh
+mkdir microkit_tutorial
+cd microkit_tutorial
 nix develop 'github:au-ts/microkit_tutorial'
 ```
 Note you will still have download the tutorial code from below.
