@@ -25,6 +25,38 @@ You'll need the following dependencies:
 {{#tabs }}
 {{#tab name="Linux" }}
 
+Follow these instructions depending on your machine's architecture to get
+the Microkit SDK.
+
+{{#tabs }}
+{{#tab name="x86-64" }}
+
+
+```sh
+# First make a directory for the tutorial
+mkdir microkit_tutorial
+cd microkit_tutorial
+# Then download and extract the SDK
+curl -L https://github.com/seL4/microkit/releases/download/{{MICROKIT_VERSION}}/microkit-sdk-{{MICROKIT_VERSION}}-linux-x86-64.tar.gz -o sdk.tar.gz
+tar xf sdk.tar.gz
+```
+{{#endtab}}
+
+{{#tab name="AArch64" }}
+```sh
+# First make a directory for the tutorial
+mkdir microkit_tutorial
+cd microkit_tutorial
+# Then download and extract the SDK
+curl -L https://github.com/seL4/microkit/releases/download/{{MICROKIT_VERSION}}/microkit-sdk-{{MICROKIT_VERSION}}-linux-aarch64.tar.gz -o sdk.tar.gz
+tar xf sdk.tar.gz
+```
+{{#endtab}}
+{{#endtabs}}
+
+Follow these instructions to get the tutorial's dependencies depending
+on your Linux distribution.
+
 {{#tabs }}
 {{#tab name="Ubuntu/Debian" }}
 ```sh
@@ -43,24 +75,11 @@ sudo dnf install -y make qemu gcc-aarch64-linux-gnu
 {{#endtab}}
 {{#endtabs}}
 
-You can get the SDK with:
-```sh
-# First make a directory for the tutorial
-mkdir microkit_tutorial
-cd microkit_tutorial
-# Then download and extract the SDK
-curl -L https://github.com/seL4/microkit/releases/download/{{MICROKIT_VERSION}}/microkit-sdk-{{MICROKIT_VERSION}}-linux-x86-64.tar.gz -o sdk.tar.gz
-tar xf sdk.tar.gz
-```
 {{#endtab }}
 {{#tab name="macOS" }}
 
-You can install the dependencies using [Homebrew](https://brew.sh/):
-
-```sh
-brew tap messense/macos-cross-toolchains
-brew install make qemu aarch64-unknown-linux-gnu
-```
+Follow these instructions depending on your what kind of Mac you have
+to get the Microkit SDK.
 
 {{#tabs }}
 {{#tab name="Apple Silicon (ARM64)" }}
@@ -84,6 +103,13 @@ tar xf sdk.tar.gz
 ```
 {{#endtab }}
 {{#endtabs }}
+
+You can install the tutorial's dependencies using [Homebrew](https://brew.sh/):
+
+```sh
+brew tap messense/macos-cross-toolchains
+brew install make qemu aarch64-unknown-linux-gnu
+```
 
 {{#endtab }}
 {{#tab name="Nix" }}
