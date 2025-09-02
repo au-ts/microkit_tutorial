@@ -29,7 +29,7 @@ you run the command.
 
 ## Virtual machines on seL4
 
-<p><img height="450" src="assets/part4/passthrough.svg" alt="Virtual machine with passthrough ethernet diagram" /></p>
+<img style="display: block; margin: auto;" width="400" src="assets/part4/passthrough.svg" alt="Virtual machine with passthrough ethernet diagram" />
 
 This diagram shows two main components involved when using virtual machines on top of seL4. Obviously there is a
 virtual machine (VM), but there is also a virtual machine monitor (VMM). The VMM is responsible for starting and
