@@ -161,7 +161,7 @@ We can easily fix this by creating a channel between the VMM and the Wordle serv
 ```xml
 <channel>
     <!-- The VMM code expects the channel ID to be 1. -->
-    <end pd="vmm" id="1" />
+    <end pd="vmm" id="1" pp="true" />
     <end pd="wordle_server" id="2" />
 </channel>
 ```
