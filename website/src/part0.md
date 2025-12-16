@@ -70,7 +70,7 @@ sudo pacman -Sy make aarch64-linux-gnu-gcc qemu-system-aarch64
 {{#endtab}}
 {{#tab name="Fedora" }}
 ```sh
-sudo dnf install -y make qemu gcc-aarch64-linux-gnu
+sudo dnf install -y make qemu-system-aarch64 gcc-aarch64-linux-gnu
 ```
 {{#endtab}}
 {{#endtabs}}
