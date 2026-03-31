@@ -11,7 +11,7 @@
 
   outputs = { nixpkgs, ... }:
     let
-      microkit-version = "2.0.1";
+      microkit-version = "2.2.0";
       microkit-platforms = {
         aarch64-darwin = "macos-aarch64";
         x86_64-darwin = "macos-x86-64";
@@ -39,10 +39,10 @@
               env.MICROKIT_SDK = pkgs.fetchzip {
                 url = "https://github.com/seL4/microkit/releases/download/${microkit-version}/microkit-sdk-${microkit-version}-${microkit-platform}.tar.gz";
                 hash = {
-                  aarch64-darwin = "sha256-bFFyVBF2E3YDJ6CYbfCOID7KGREQXkIFDpTD4MzxfCE=";
-                  x86_64-darwin = "sha256-tQWrI5LRp05tLy/HIxgN+0KFJrlmOQ+dpws4Fre+6E0=";
-                  x86_64-linux = "sha256-YpgIAXWB8v4Njm/5Oo0jZpRt/t+e+rVTwFTJ8zr2Hn4=";
-                  aarch64-linux = "sha256-GwWDRJalJOpAYCP/qggFOHDh2e2J1LspWUsyjopECYA=";
+                  aarch64-darwin = "sha256-UZBEwS3vAQqJe6Xj+13smJRS0RYfoc0uCK7hB8ujbvA=";
+                  x86_64-darwin = "sha256-aE2mYToK2ne9vzw6d3YQDzJvhpnI8IHOR9+VqZxwlfY=";
+                  aarch64-linux = "sha256-U1hA7Vk/TlSWgV7KiEeG7AkA7t5IR/x89mSE0YHBRNA=";
+                  x86_64-linux = "sha256-dxPu2Q01qjKhME6Z6kgG4ASDUe12ytZmh5tCtFva/L0=";
                 }.${system} or (throw "Unsupported system: ${system}");
               };
 
