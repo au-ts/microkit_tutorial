@@ -28,7 +28,8 @@ updated.
 
 ## Updating the website
 
-The website is part of the [seL4 docssite](https://github.com/sel4/docs).
+The website is part of the [seL4 docssite](https://github.com/sel4/docs). It has it's
+own deploy process that automatically fetches the latest in this repository.
 
 ## Updating the tutorial and solution code
 
