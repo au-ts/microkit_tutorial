@@ -342,7 +342,7 @@ bool guest_restart(void) {
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AFSR1, 0);
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ESR, 0);
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_FAR, 0);
-    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ISR, 0);
+    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_PAR, 0);
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_VBAR, 0);
     /* thread pointer/ID registers EL0/EL1 */
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_TPIDR_EL1, 0);
