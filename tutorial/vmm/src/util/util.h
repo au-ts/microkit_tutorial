@@ -30,6 +30,10 @@
 #define static_assert _Static_assert
 #endif
 
+#ifndef BIT
+#define BIT(nr) (1UL << (nr))
+#endif
+
 //  __attribute__ ((__noreturn__))
 // void __assert_func(const char *file, int line, const char *function, const char *str);
 
@@ -130,7 +134,6 @@ print_vcpu_regs(uint64_t vcpu_id) {
     printf("    AMAIR: 0x%lx\n", microkit_vcpu_arm_read_reg(vcpu_id, seL4_VCPUReg_AMAIR));
     printf("    CIDR:  0x%lx\n", microkit_vcpu_arm_read_reg(vcpu_id, seL4_VCPUReg_CIDR));
     /* other system registers EL1 */
-    printf("    ACTLR: 0x%lx\n", microkit_vcpu_arm_read_reg(vcpu_id, seL4_VCPUReg_ACTLR));
     printf("    CPACR: 0x%lx\n", microkit_vcpu_arm_read_reg(vcpu_id, seL4_VCPUReg_CPACR));
     /* exception handling registers EL1 */
     printf("    AFSR0: 0x%lx\n", microkit_vcpu_arm_read_reg(vcpu_id, seL4_VCPUReg_AFSR0));

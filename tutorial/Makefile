@@ -38,7 +38,7 @@ PRINTF_OBJS := printf.o util.o
 SERIAL_SERVER_OBJS := $(PRINTF_OBJS) serial_server.o
 CLIENT_OBJS := $(PRINTF_OBJS) client.o
 WORDLE_SERVER_OBJS := $(PRINTF_OBJS) wordle_server.o
-VMM_OBJS := $(PRINTF_OBJS) vmm.o psci.o smc.o fault.o vgic.o global_data.o vgic_v2.o
+VMM_OBJS := $(PRINTF_OBJS) vmm.o psci.o smc.o fault.o cpuif.o vgic.o global_data.o vgic_v2.o
 
 BOARD_DIR := $(MICROKIT_SDK)/board/$(BOARD)/$(MICROKIT_CONFIG)
 

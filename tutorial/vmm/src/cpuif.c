@@ -1,0 +1,180 @@
+/*
+ * Copyright 2025, UNSW
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+#include "fault.h"
+#include "util/util.h"
+
+#define ESR_EL2_IL_BIT 25
+
+/* The ISS encoding was taken from "Arm A-profile Architecture Registers" DDI0601,
+   section "ESR_EL2, Exception Syndrome Register (EL2)",
+   heading "ISS encoding for an exception from MSR, MRS, or System instruction execution in AArch64 state" */
+#define ISS_MASK_FROM_HSR      0xffffff
+#define ISS_SYSREG_IS_READ_BIT 0
+#define ISS_SYSREG_CRM_SHIFT   1
+#define ISS_SYSREG_CRM_MASK    0xf
+#define ISS_SYSREG_RT_SHIFT    5
+#define ISS_SYSREG_RT_MASK     0x1f
+#define ISS_SYSREG_CRN_SHIFT   10
+#define ISS_SYSREG_CRN_MASK    0xf
+#define ISS_SYSREG_OP1_SHIFT   14
+#define ISS_SYSREG_OP1_MASK    0x7
+#define ISS_SYSREG_OP2_SHIFT   17
+#define ISS_SYSREG_OP2_MASK    0x7
+#define ISS_SYSREG_OP0_SHIFT   20
+#define ISS_SYSREG_OP0_MASK    0x3
+
+typedef bool (*sysreg_read_exception_handler_t)(size_t vcpu_id, seL4_UserContext *regs, uint64_t *data);
+typedef bool (*sysreg_write_exception_handler_t)(size_t vcpu_id, seL4_UserContext *regs, uint64_t data);
+
+/* Data structure of system registers we currently emulate. */
+typedef struct aarch64_sysreg_info {
+    /* For debugging only. */
+    char *name;
+
+    /* Location of register. */
+    uint8_t crn;
+    uint8_t crm;
+    uint8_t opc0;
+    uint8_t opc1;
+    uint8_t opc2;
+
+    /* Access functions for both direction. NULL if access will be denied. */
+    sysreg_read_exception_handler_t read_fn;
+    sysreg_write_exception_handler_t write_fn;
+} aarch64_sysreg_info_t;
+
+static bool sysreg_read_no_op(size_t vcpu_id, seL4_UserContext *regs, uint64_t *data)
+{
+    *data = 0;
+    return true;
+}
+
+static bool sysreg_write_no_op(size_t vcpu_id, seL4_UserContext *regs, uint64_t data)
+{
+    return true;
+}
+
+static const aarch64_sysreg_info_t cpuif_reginfo[] = {
+    /* See "Arm® Architecture Reference Manual for A-profile architecture"
+       ARM DDI 0487, version M.d */
+    {
+        /* "D24.3.20 MDSCR_EL1, Monitor Debug System Control Register"`
+         * Page D24-10282 */
+        .name = "MDSCR_EL1",
+        .opc0 = 2,
+        .opc1 = 0,
+        .crn = 0,
+        .crm = 2,
+        .opc2 = 2,
+        .read_fn = sysreg_read_no_op,
+        .write_fn = sysreg_write_no_op,
+    },
+    {
+        /* "D24.3.23 OSDLR_EL1, OS Double Lock Register"
+         * Page D24-10299 */
+        .name = "OSDLR_EL1",
+        .opc0 = 2,
+        .opc1 = 0,
+        .crn = 1,
+        .crm = 3,
+        .opc2 = 4,
+        .read_fn = sysreg_read_no_op,
+        .write_fn = sysreg_write_no_op,
+    },
+    {
+        /* "D24.3.27 OSLAR_EL1, OS Lock Access Register"
+         * Page D24-10311 */
+        .name = "OSLAR_EL1",
+        .opc0 = 2,
+        .opc1 = 0,
+        .crn = 1,
+        .crm = 0,
+        .opc2 = 4,
+        .read_fn = sysreg_read_no_op,
+        .write_fn = sysreg_write_no_op,
+    },
+};
+
+static int sysreg_fault_get_rt(uint64_t hsr)
+{
+    /* Make sure the instruction length bit == 1 for 32-bits instructions. */
+    if (BIT(ESR_EL2_IL_BIT)) {
+        return (hsr >> ISS_SYSREG_RT_SHIFT) & ISS_SYSREG_RT_MASK;
+    } else {
+        LOG_VMM_ERR("sysreg_fault_get_rt() for 16-bits instructions not implemented.\n");
+        assert(false);
+    }
+}
+
+/* We can't use `fault_get_data()` because the HSR register encoding is different in this scenario. */
+static uint64_t sysreg_fault_get_data(seL4_UserContext *regs, uint64_t hsr)
+{
+    /* Get register opearand */
+    int rt = sysreg_fault_get_rt(hsr);
+    uint64_t data = *decode_rt(rt, regs);
+    return data;
+}
+
+static void sysreg_fault_set_data(seL4_UserContext *regs, uint64_t hsr, uint64_t data)
+{
+    int rt = sysreg_fault_get_rt(hsr);
+    *decode_rt(rt, regs) = data;
+}
+
+bool handle_sysreg_64_fault(size_t vcpu_id, uint64_t hsr, seL4_UserContext *regs)
+{
+    uint32_t iss = hsr & ISS_MASK_FROM_HSR;
+    uint8_t op0 = (iss >> ISS_SYSREG_OP0_SHIFT) & ISS_SYSREG_OP0_MASK;
+    uint8_t op2 = (iss >> ISS_SYSREG_OP2_SHIFT) & ISS_SYSREG_OP2_MASK;
+    uint8_t op1 = (iss >> ISS_SYSREG_OP1_SHIFT) & ISS_SYSREG_OP1_MASK;
+    uint8_t crn = (iss >> ISS_SYSREG_CRN_SHIFT) & ISS_SYSREG_CRN_MASK;
+    uint8_t crm = (iss >> ISS_SYSREG_CRM_SHIFT) & ISS_SYSREG_CRM_MASK;
+    bool is_read = (iss >> ISS_SYSREG_IS_READ_BIT) & 0x1;
+    bool success = false;
+
+    if (op0 == 2 && op1 == 0 && crn == 0 && op2 >= 4 && op2 <= 7) {
+        /* DBG{B,W}{V,C}R<crm>_EL1: RAZ/WI */
+        success = true;
+    } else if (op0 == 3 && op1 == 3 && crn == 9) {
+        /* PMCR, PMCNTEN{SET,CLR}, PMOVS{SET,CLR}, PMSWINC, PMSELR, PMCEID0/1,
+        PMCCNTR, PMXEV{TYPER,CNTR}, PMUSERENR, PMOVSSET, etc. */
+        success = true;
+    } else if (op0 == 3 && op1 == 3 && crn == 14 && crm >= 8) {
+        /* PMEVCNTR<n>_EL0 (CRm 8..11), PMEVTYPER<n>_EL0 (CRm 12..15), PMCCFILTR_EL0 */
+        success = true;
+    } else if (op0 == 3 && op1 == 0 && crn == 9 && crm == 14) {
+        /* PMINTEN{SET,CLR}_EL1, PMMIR_EL1 and other EL1 PMU controls */
+        success = true;
+    } else {
+        for (int i = 0; i < ARRAY_SIZE(cpuif_reginfo); i++) {
+            if (cpuif_reginfo[i].opc0 == op0 && cpuif_reginfo[i].opc1 == op1 && cpuif_reginfo[i].crn == crn
+                && cpuif_reginfo[i].crm == crm && cpuif_reginfo[i].opc2 == op2) {
+                /* Check access rights */
+                if (is_read && cpuif_reginfo[i].read_fn) {
+                    uint64_t data;
+                    success = cpuif_reginfo[i].read_fn(vcpu_id, regs, &data);
+                    sysreg_fault_set_data(regs, hsr, data);
+                } else if (!is_read && cpuif_reginfo[i].write_fn) {
+                    uint64_t data = sysreg_fault_get_data(regs, hsr);
+                    success = cpuif_reginfo[i].write_fn(vcpu_id, regs, data);
+                }
+
+                break;
+            }
+        }
+    }
+
+    if (success) {
+        return fault_advance_vcpu(regs);
+    } else {
+        LOG_VMM("failed to handle sysreg 64 exception with instruction: op0 0x%x, op2 0x%x, op1 0x%x, crn 0x%x, crm "
+                "0x%x, is "
+                "read %u\n",
+                op0, op2, op1, crn, crm, is_read);
+    }
+    return false;
+}

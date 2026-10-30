@@ -8,6 +8,7 @@
 #include <microkit.h>
 #include "util/util.h"
 #include "vgic/vgic.h"
+#include "cpuif.h"
 #include "smc.h"
 #include "fault.h"
 #include "hsr.h"
@@ -84,12 +85,25 @@ static bool handle_vcpu_fault(microkit_msginfo msginfo, uint64_t vcpu_id)
 {
     uint32_t hsr = microkit_mr_get(seL4_VCPUFault_HSR);
     uint64_t hsr_ec_class = HSR_EXCEPTION_CLASS(hsr);
+
+    seL4_UserContext regs;
+    int err = seL4_TCB_ReadRegisters(BASE_VM_TCB_CAP + vcpu_id, false, 0, SEL4_USER_CONTEXT_SIZE, &regs);
+    if (err != seL4_NoError) {
+        LOG_VMM_ERR("seL4_TCB_ReadRegisters returned %d\n", err);
+        return false;
+    }
+
     switch (hsr_ec_class) {
         case HSR_SMC_64_EXCEPTION:
             return handle_smc(vcpu_id, hsr);
         case HSR_WFx_EXCEPTION:
             // If we get a WFI exception, we just do nothing in the VMM.
             return true;
+        case HSR_SYSREG_64_EXCEPTION: {
+            bool status = handle_sysreg_64_fault(vcpu_id, hsr, &regs);
+            seL4_TCB_WriteRegisters(BASE_VM_TCB_CAP + GUEST_ID, true, 0, SEL4_USER_CONTEXT_SIZE, &regs);
+            return status;
+        }
         default:
             LOG_VMM_ERR("unknown SMC exception, EC class: 0x%lx, HSR: 0x%lx\n", hsr_ec_class, hsr);
             return false;
@@ -335,7 +349,6 @@ bool guest_restart(void) {
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AMAIR, 0);
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CIDR, 0);
     /* other system registers EL1 */
-    microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_ACTLR, 0);
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_CPACR, 0);
     /* exception handling registers EL1 */
     microkit_vcpu_arm_write_reg(GUEST_ID, seL4_VCPUReg_AFSR0, 0);
