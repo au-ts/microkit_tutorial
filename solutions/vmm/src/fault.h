@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+#pragma once
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <microkit.h>
@@ -19,3 +21,5 @@ char *fault_to_string(seL4_Word fault_label);
 
 bool fault_is_write(uint64_t fsr);
 bool fault_is_read(uint64_t fsr);
+
+uint64_t *decode_rt(uint64_t reg, seL4_UserContext *regs);
