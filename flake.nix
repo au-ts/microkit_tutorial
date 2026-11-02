@@ -39,8 +39,8 @@
               env.MICROKIT_SDK = pkgs.fetchzip {
                 url = "https://github.com/seL4/microkit/releases/download/${microkit-version}/microkit-sdk-${microkit-version}-${microkit-platform}.tar.gz";
                 hash = {
-                  aarch64-darwin = "sha256-DPICx/sJbSqUEG+PZlOttMaBBy6ge6iK8Nwbx1vd1Ec=";
-                  x86_64-darwin = "sha256-ZNqefoiqudbWcF8ReJEM4dAab2fm+7vaUje6pAfkW+U=";
+                  aarch64-darwin = "sha256-OOc20qE7HmNXKvdY77AeI2x5Lts29E3lety1nJuomxM=";
+                  x86_64-darwin = "sha256-FZvaFv97Q/md8QqGDpmFVlRGYdDqjw48mbgdGr6C/ks=";
                   aarch64-linux = "sha256-z8L1eTmqLs6acwf25Wj4X3VkCuP2gVBMAo+B1OVDXiw=";
                   x86_64-linux = "sha256-FrSMQgjeW5Zox2JsNWa2Zme+gjv9d3ISXVbyBfnEqlI=";
                 }.${system} or (throw "Unsupported system: ${system}");
